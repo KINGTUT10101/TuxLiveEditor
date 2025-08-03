@@ -32,6 +32,7 @@ local function fileBrowser (opt, x, y, w, h)
             local maxItemSpace = tux.layout.remainingOverallSize ()
             local itemsPerPage = math.floor (maxItemSpace / lineHeight)
             local startIndex = itemsPerPage * (page - 1) + 1
+            local maxPage = math.ceil(#opt.files / itemsPerPage)
 
             -- Menu controls
             tux.layout.pushNestedGrid ({
@@ -42,17 +43,17 @@ local function fileBrowser (opt, x, y, w, h)
                 if tux.show.button ({
                     text = "Prev"
                 }, tux.layout.nextItem ({}, "25%", "100%")) == "end" then
-                    
+                    page = math.max (1, page - 1)
                 end
 
                 tux.show.label ({
-                    text = page .. " / " .. math.ceil(#opt.files / itemsPerPage),
+                    text = page .. " / " .. maxPage,
                 }, tux.layout.nextItem ({}, "50%", "100%"))
 
                 if tux.show.button ({
                     text = "Next"
                 }, tux.layout.nextItem ({}, "25%", "100%")) == "end" then
-                    
+                    page = math.min (maxPage, page + 1)
                 end
 
             tux.layout.popGrid ()
