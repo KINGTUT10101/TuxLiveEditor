@@ -29,6 +29,10 @@ local function fileBrowser (opt, x, y, w, h)
             }, tux.layout.nextItem({}, "100%", "100%"))
             tux.layout.nextLine ()
 
+            local maxItemSpace = tux.layout.remainingOverallSize ()
+            local itemsPerPage = math.floor (maxItemSpace / lineHeight)
+            local startIndex = itemsPerPage * (page - 1) + 1
+
             -- Menu controls
             tux.layout.pushNestedGrid ({
                 padding = {x = 10},
@@ -42,7 +46,7 @@ local function fileBrowser (opt, x, y, w, h)
                 end
 
                 tux.show.label ({
-                    text = page .. " / 1",
+                    text = page .. " / " .. math.ceil(#opt.files / itemsPerPage),
                 }, tux.layout.nextItem ({}, "50%", "100%"))
 
                 if tux.show.button ({
@@ -52,10 +56,6 @@ local function fileBrowser (opt, x, y, w, h)
                 end
 
             tux.layout.popGrid ()
-
-            local maxItemSpace = tux.layout.remainingOverallSize ()
-            local itemsPerPage = math.floor (maxItemSpace / lineHeight)
-            local startIndex = itemsPerPage * (page - 1) + 1
 
             for i = startIndex, startIndex + itemsPerPage do
                 tux.layout.nextLine ()
