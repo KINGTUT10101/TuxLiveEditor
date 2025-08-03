@@ -1,9 +1,25 @@
-local tux = require ("tux")
+local tux = require ("libs.tux")
+local log = require ("libs.log")
+local settings = require ("data.settings")
+
+log.usecolor = false
+log.info ("Starting Tux Live Editor...")
+
+-- Sets up Tux
+tux.utils.setScreenScale (settings.scale)
 
 -- UI components
 local toolbar = require ("components.toolbar")
+local fileBrowser = require ("components.fileBrowser")
 
 local hideui = false
+local script = nil -- A function that creates a UI component every frame
+local inputData = nil -- Input data for the UI component
+
+love.filesystem.createDirectory ("Scripts")
+love.filesystem.createDirectory ("Inputs")
+
+log.info ("Tux Live Editor started successfully!")
 
 function love.update (dt)
     tux.callbacks.update (dt)
@@ -12,15 +28,15 @@ function love.update (dt)
 
     if hideui == false then
         hideui = toolbar (hideui, mx, my)
+        
+        -- local files = love.filesystem.getDirectoryItems ("/Scripts")
     end
+
+    -- Render the UI
 end
 
 function love.draw ()
     tux.callbacks.draw ()
-
-    -- local mx, my = love.mouse.getPosition ()
-    -- love.graphics.setColor (1, 1, 1, 1)
-    -- love.graphics.print (mx .. ", " .. my, 700, 25)
 end
 
 function love.textinput (text)
