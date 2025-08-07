@@ -1,6 +1,7 @@
 local tux = require ("libs.tux")
 local log = require ("libs.log")
 local settings = require ("data.settings")
+local compHandler = require ("helpers.compHandler")
 
 log.usecolor = false
 log.info ("Starting Tux Live Editor...")
@@ -28,11 +29,9 @@ function love.update (dt)
 
     if hideui == false then
         hideui = toolbar (hideui, mx, my)
-        
-        -- local files = love.filesystem.getDirectoryItems ("/Scripts")
     end
 
-    -- Render the UI
+    compHandler:update ()
 end
 
 function love.draw ()
@@ -51,6 +50,13 @@ function love.keypressed (key, scancode, isrepeat)
 
     elseif key == "m" then
         tux.utils.setDebugMode (not tux.utils.getDebugMode ())
+
+    elseif key == "r" then
+        if love.keyboard.isDown ("lshift") == true then
+            compHandler:reloadScript ()
+        elseif love.keyboard.isDown ("lctrl") == true then
+            compHandler:reloadInputData ()
+        end
     end
 end
 

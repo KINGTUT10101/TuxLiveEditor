@@ -2,6 +2,9 @@ local tux = require ("libs.tux")
 local colors = require ("data.colors")
 local settings = require ("data.settings")
 local lume = require ("libs.lume")
+local compHandler = require ("helpers.compHandler")
+local log = require ("libs.log")
+local asyncOpenURL = require ("helpers.asyncOpenURL")
 
 local fileBrowser = require ("components.fileBrowser")
 
@@ -28,7 +31,16 @@ local function handleMenuState ()
             menuState = "none"
 
             -- Load the file
-            print ("Loading " .. selectedFile)
+            log.info ("Loading script " .. selectedFile .. "...")
+            local success, data = pcall (compHandler.loadScript, compHandler, love.filesystem.getSaveDirectory () .. "/Scripts/" .. selectedFile)
+
+            if success == true then
+                if data == true then
+                    log.info ("Script " .. selectedFile .. " loaded successfully!")
+                end
+            else
+                log.error ("Error: ", data)
+            end
         end
 
     elseif menuState == "openData" then
@@ -42,7 +54,16 @@ local function handleMenuState ()
             menuState = "none"
 
             -- Load the file
-            print ("Loading " .. selectedFile)
+            log.info ("Loading input data " .. selectedFile .. "...")
+            local success, data = pcall (compHandler.loadInputData, compHandler, love.filesystem.getSaveDirectory () .. "/Inputs/" .. selectedFile)
+
+            if success == true then
+                if data == true then
+                    log.info ("Input data " .. selectedFile .. " loaded successfully!")
+                end
+            else
+                log.error ("Error: ", data)
+            end
         end
 
     elseif menuState == "options" then
@@ -63,7 +84,7 @@ local function toolbar (hideui, mx, my)
             x = 5,
             y = 5,
         },
-        maxLineSize = 25,
+        maxLineSize = settings.toolbarHeight,
     }, 0, 0)
 
     if tux.show.button ({
@@ -90,12 +111,15 @@ local function toolbar (hideui, mx, my)
         end
     end
 
-    tux.show.button ({
+    if tux.show.button ({
         text = "RELOAD",
         tooltip = {
             text = (settings.showTooltips == true) and "Reloads the current script and input data" or ""
         }
-    }, tux.layout.nextItem ({}, toolbarBtnWidth, "100%"))
+    }, tux.layout.nextItem ({}, toolbarBtnWidth, "100%")) == "end" then
+        compHandler:reloadInputData ()
+        compHandler:reloadScript ()
+    end
 
     if tux.show.button ({
         text = "FOLDER",
@@ -103,7 +127,8 @@ local function toolbar (hideui, mx, my)
             text = (settings.showTooltips == true) and "Opens the folder containing the project files" or ""
         }
     }, tux.layout.nextItem ({}, toolbarBtnWidth, "100%")) == "end" then
-        love.system.openURL ("file://"..love.filesystem.getSaveDirectory())
+        log.info ("Opening save directory...")
+        asyncOpenURL ("file://"..love.filesystem.getSaveDirectory())
     end
 
     tux.show.button ({
@@ -124,10 +149,6 @@ local function toolbar (hideui, mx, my)
         maxLineSize = 25,
         dir = "left",
     }, 0, 0)
-
-    -- print (tux.layout.nextItem ({}, 75, "100%"))
-    -- print (tux.core.applyOrigin (nil, nil, nil, tux.layout.nextItem ({}, 75, "100%")))
-    -- print ()
 
     tux.show.label ({
         text = "FPS: " .. love.timer.getFPS(),
