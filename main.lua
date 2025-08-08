@@ -38,6 +38,37 @@ function love.update (dt)
         hideui = toolbar (hideui, mx, my)
     end
 
+    -- Adjusts the x/y coords or the width/height of the component
+    local shiftHeld = love.keyboard.isDown("lshift", "rshift")
+
+    if shiftHeld then
+        if love.keyboard.isDown("left", "a") then
+            compHandler:adjustPosition(0, 0, -settings.camVelocity * dt, 0)
+        end
+        if love.keyboard.isDown("right", "d") then
+            compHandler:adjustPosition(0, 0, settings.camVelocity * dt, 0)
+        end
+        if love.keyboard.isDown("up", "w") then
+            compHandler:adjustPosition(0, 0, 0, -settings.camVelocity * dt)
+        end
+        if love.keyboard.isDown("down", "s") then
+            compHandler:adjustPosition(0, 0, 0, settings.camVelocity * dt)
+        end
+    else
+        if love.keyboard.isDown("left", "a") then
+            compHandler:adjustPosition(-settings.camVelocity * dt, 0, 0, 0)
+        end
+        if love.keyboard.isDown("right", "d") then
+            compHandler:adjustPosition(settings.camVelocity * dt, 0, 0, 0)
+        end
+        if love.keyboard.isDown("up", "w") then
+            compHandler:adjustPosition(0, -settings.camVelocity * dt, 0, 0)
+        end
+        if love.keyboard.isDown("down", "s") then
+            compHandler:adjustPosition(0, settings.camVelocity * dt, 0, 0)
+        end
+    end
+
     compHandler:update ()
 end
 

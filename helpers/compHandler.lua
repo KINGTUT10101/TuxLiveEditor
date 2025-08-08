@@ -1,4 +1,5 @@
 local log = require ("libs.log")
+local settings = require ("data.settings")
 
 local compHandler = {
     errorOccurred = true,
@@ -53,9 +54,15 @@ function compHandler:loadScript (filepath)
     if success == true then
         assert (type (data) == "function", "Provided script (type: " .. type (data) .. ") at " .. filepath .. " is not a function")
 
+        if self.scriptPath ~= filepath then
+            compHandler:setPosition (settings.defCompDims.x, settings.defCompDims.y, settings.defCompDims.w, settings.defCompDims.h)
+        end
+        
         self.scriptFunc = data
         self.scriptPath = filepath
         self.errorOccurred = false
+
+        log.info ("Script " .. filepath .. " loaded successfully!")
 
         return true
     else
@@ -76,6 +83,8 @@ function compHandler:loadInputData (filepath)
         self.inputData = data
         self.inputDataPath = filepath
         self.errorOccurred = false
+
+        log.info ("Input data " .. filepath .. " loaded successfully!")
 
         return true
     else
@@ -106,11 +115,18 @@ function compHandler:reloadInputData ()
     end
 end
 
-function compHandler:adjustPosition (x, y, w, h)
+function compHandler:setPosition (x, y, w, h)
     self.position.x = x
     self.position.y = y
     self.position.w = w
     self.position.h = h
+end
+
+function compHandler:adjustPosition (x, y, w, h)
+    self.position.x = self.position.x + x
+    self.position.y = self.position.y + y
+    self.position.w = self.position.w + w
+    self.position.h = self.position.h + h
 end
 
 function compHandler:update ()

@@ -25,6 +25,14 @@ local settingsItems = {
         },
     },
     {
+        key = "camVelocity",
+        type = "float",
+        range = {
+            min = 50,
+            max = 500,
+        }
+    },
+    {
         key = "bgColor",
         type = "color",
         subtype = "r",

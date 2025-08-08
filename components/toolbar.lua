@@ -36,11 +36,7 @@ local function handleMenuState ()
             log.info ("Loading script " .. selectedFile .. "...")
             local success, data = pcall (compHandler.loadScript, compHandler, love.filesystem.getSaveDirectory () .. "/Scripts/" .. selectedFile)
 
-            if success == true then
-                if data == true then
-                    log.info ("Script " .. selectedFile .. " loaded successfully!")
-                end
-            else
+            if success == false then
                 log.error ("Error: ", data)
             end
         end
@@ -59,11 +55,7 @@ local function handleMenuState ()
             log.info ("Loading input data " .. selectedFile .. "...")
             local success, data = pcall (compHandler.loadInputData, compHandler, love.filesystem.getSaveDirectory () .. "/Inputs/" .. selectedFile)
 
-            if success == true then
-                if data == true then
-                    log.info ("Input data " .. selectedFile .. " loaded successfully!")
-                end
-            else
+            if success == false then
                 log.error ("Error: ", data)
             end
         end

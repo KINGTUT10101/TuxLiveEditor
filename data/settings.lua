@@ -14,7 +14,8 @@ local defaultSettings = {
     defWindowDims = {
         w = love.graphics.getWidth (),
         h = love.graphics.getHeight (),
-    }
+    },
+    camVelocity = 200,
 }
 
 local settings = json.decode (love.filesystem.read ("settings.json") or "{}")
