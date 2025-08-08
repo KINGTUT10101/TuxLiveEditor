@@ -74,7 +74,12 @@ end
 
 function love.draw ()
     love.graphics.setBackgroundColor (settings.bgColor)
-    tux.callbacks.draw ()
+    local success, result = xpcall (tux.callbacks.draw, debug.traceback)
+
+    if success == false and compHandler.errorOccurred == false then
+        compHandler.errorOccurred = true
+        log.error ("Error in Tux draw callback: ", result)
+    end
 end
 
 function love.textinput (text)
