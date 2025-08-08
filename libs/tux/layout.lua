@@ -54,17 +54,17 @@ end
 
 function tux.layout.getOriginWidth ()
     local origin = tux.layoutData.originStack[#tux.layoutData.originStack]
-    return origin.w
+    return origin.w / origin.scale
 end
 
 function tux.layout.getOriginHeight ()
     local origin = tux.layoutData.originStack[#tux.layoutData.originStack]
-    return origin.h
+    return origin.h / origin.scale
 end
 
 function tux.layout.getOriginDimensions ()
     local origin = tux.layoutData.originStack[#tux.layoutData.originStack]
-    return origin.w, origin.h
+    return origin.w / origin.scale, origin.h / origin.scale
 end
 
 local validDirsX = {
@@ -175,6 +175,7 @@ end
 
 function tux.layout.nextItem(itemOpt, w, h, ...)
     itemOpt = itemOpt or {}
+    assert (type (itemOpt) == "table", "Provided item options is not a table")
 
     local opt = tux.layoutData.gridStack[#tux.layoutData.gridStack]
 
