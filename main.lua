@@ -2,12 +2,19 @@ local tux = require ("libs.tux")
 local log = require ("libs.log")
 local settings = require ("data.settings")
 local compHandler = require ("helpers.compHandler")
+local settingsMan = require ("helpers.settingsMan")
 
 log.usecolor = false
 log.info ("Starting Tux Live Editor...")
 
+-- Set screen dimensions
+love.window.setMode (settings.defWindowDims.w, settings.defWindowDims.h, {
+    resizable = true,
+})
+
 -- Sets up Tux
 tux.utils.setScreenScale (settings.scale)
+tux.utils.setScreenSize (settings.defWindowDims.w, settings.defWindowDims.h)
 
 -- UI components
 local toolbar = require ("components.toolbar")
@@ -35,6 +42,7 @@ function love.update (dt)
 end
 
 function love.draw ()
+    love.graphics.setBackgroundColor (settings.bgColor)
     tux.callbacks.draw ()
 end
 
@@ -66,4 +74,8 @@ end
 
 function love.filedropped (file)
 
+end
+
+function love.quit ()
+    settingsMan:save ()
 end

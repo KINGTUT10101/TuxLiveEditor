@@ -5,8 +5,10 @@ local lume = require ("libs.lume")
 local compHandler = require ("helpers.compHandler")
 local log = require ("libs.log")
 local asyncOpenURL = require ("helpers.asyncOpenURL")
+local settingsMan = require ("helpers.settingsMan")
 
 local fileBrowser = require ("components.fileBrowser")
+local options = require ("components.options")
 
 local menuState = "none"
 local toolbarBtnWidth = 75
@@ -67,7 +69,15 @@ local function handleMenuState ()
         end
 
     elseif menuState == "options" then
+        local closed
         
+        closed, page = options ({
+            page = page
+        }, 0, 0, 300, 450)
+
+        if closed == true then
+            menuState = "none"
+        end
     else
         page = 1
         selectedFile = nil
@@ -131,12 +141,17 @@ local function toolbar (hideui, mx, my)
         asyncOpenURL ("file://"..love.filesystem.getSaveDirectory())
     end
 
-    tux.show.button ({
+    if tux.show.button ({
         text = "OPTIONS",
         tooltip = {
             text = (settings.showTooltips == true) and "Opens the options menu" or ""
         }
-    }, tux.layout.nextItem ({}, toolbarBtnWidth, "100%"))
+    }, tux.layout.nextItem ({}, toolbarBtnWidth, "100%")) == "end" then
+        if menuState == "options" then
+            settingsMan:save ()
+        end
+        menuState = (menuState ~= "options") and "options" or "none"
+    end
 
     tux.layout.popGrid ()
 
@@ -146,7 +161,7 @@ local function toolbar (hideui, mx, my)
             x = 5,
             y = 5,
         },
-        maxLineSize = 25,
+        maxLineSize = settings.toolbarHeight,
         dir = "left",
     }, 0, 0)
 
@@ -183,7 +198,7 @@ local function toolbar (hideui, mx, my)
     -- Toolbar background
     tux.show.label ({
         colors = colors.label
-    }, 0, 0, tux.layout.getOriginWidth (), 25)
+    }, 0, 0, tux.layout.getOriginWidth (), settings.toolbarHeight)
 
     return hideui
 end

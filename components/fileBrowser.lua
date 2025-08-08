@@ -30,7 +30,7 @@ local function fileBrowser (opt, x, y, w, h)
             tux.layout.nextLine ()
 
             local maxItemSpace = tux.layout.remainingOverallSize ()
-            local itemsPerPage = math.floor (maxItemSpace / lineHeight)
+            local itemsPerPage = math.floor (maxItemSpace / lineHeight) - 1
             local startIndex = itemsPerPage * (page - 1) + 1
             local maxPage = math.ceil(#opt.files / itemsPerPage)
 
