@@ -9,14 +9,6 @@ local settingsItems = {
         type = "boolean",
     },
     {
-        key = "scale",
-        type = "float",
-        range = {
-            min = 0.25,
-            max = 5,
-        }
-    },
-    {
         key = "toolbarHeight",
         type = "integer",
         range = {
@@ -66,6 +58,14 @@ local settingsItems = {
         key = "defCompDims",
         type = "dim",
         subtype = "h"
+    },
+    {
+        key = "scale",
+        type = "float",
+        range = {
+            min = 0.25,
+            max = 5,
+        }
     },
 }
 local lineHeight = 25
@@ -121,7 +121,7 @@ local function handleSettingItem (settingItem)
     elseif settingItem.type == "dim" then
         tux.show.label ({
             colors = colors.none,
-            text = settingItem.key .. " - " .. settings[settingItem.key][settingItem.subtype],
+            text = settingItem.key .. "(" .. settingItem.subtype .. ")" .. " - " .. settings[settingItem.key][settingItem.subtype],
             align = "left",
             fsize = 10,
         }, tux.layout.nextItem ({}, "50%", "100%"))
@@ -198,9 +198,11 @@ local function options (opt, x, y, w, h)
             tux.layout.nextLine ()
 
             local maxItemSpace = tux.layout.remainingOverallSize ()
-            local itemsPerPage = math.floor (maxItemSpace / lineHeight) - 2
+            local itemsPerPage = math.floor (maxItemSpace / lineHeight) - 5 -- Magic number, WTF? Fix this later
             local startIndex = itemsPerPage * (page - 1) + 1
             local maxPage = math.ceil(#settingsItems / itemsPerPage)
+            print (maxItemSpace, maxItemSpace / lineHeight, maxItemSpace / lineHeight - 2)
+            print (itemsPerPage, #settingsItems,  #settingsItems / itemsPerPage, maxPage)
 
             -- Menu controls
             tux.layout.pushNestedGrid ({
