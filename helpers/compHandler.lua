@@ -131,6 +131,11 @@ function compHandler:adjustPosition (x, y, w, h)
     self.position.h = self.position.h + h
 end
 
+function compHandler:resetPosition (x, y)
+    self.position.x = 0
+    self.position.y = 0
+end
+
 function compHandler:update ()
     if self.scriptFunc ~= nil and self.errorOccurred == false then
         local originStack = copyTable (tux.layoutData.originStack)

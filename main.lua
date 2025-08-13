@@ -108,6 +108,13 @@ function love.keypressed (key, scancode, isrepeat)
         elseif love.keyboard.isDown ("lctrl") == true then
             compHandler:reloadInputData ()
         end
+
+    elseif key == "q" then
+        compHandler:resetPosition ()
+
+    elseif key == "x" then
+        compHandler.errorOccurred = true
+        log.error ("An error was manually triggered by the user")
     end
 end
 
