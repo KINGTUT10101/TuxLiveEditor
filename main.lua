@@ -30,7 +30,14 @@ love.filesystem.createDirectory ("Inputs")
 log.info ("Tux Live Editor started successfully!")
 
 function love.update (dt)
-    tux.callbacks.update (dt)
+    local success, result = xpcall (function () tux.callbacks.update (dt) end, debug.traceback)
+
+    if success == false and compHandler.errorOccurred == false then
+        log.error ("Error in Tux update callback: ", tostring (result))
+        compHandler.errorOccurred = true
+
+        tux.layout.clearStacks ()
+    end
 
     local mx, my = love.mouse.getPosition ()
 
@@ -78,7 +85,7 @@ function love.draw ()
 
     if success == false and compHandler.errorOccurred == false then
         compHandler.errorOccurred = true
-        log.error ("Error in Tux draw callback: ", result)
+        log.error ("Error in Tux draw callback: ", tostring (result))
     end
 end
 

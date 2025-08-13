@@ -1,5 +1,7 @@
 local log = require ("libs.log")
 local settings = require ("data.settings")
+local copyTable = require ("helpers.copyTable")
+local tux = require ("libs.tux")
 
 local compHandler = {
     errorOccurred = true,
@@ -67,8 +69,8 @@ function compHandler:loadScript (filepath)
         return true
     else
         log.error ("Failed to load script!")
-        log.error (data)
-        
+        log.error (tostring (data))
+
         return false
     end
 end
@@ -89,7 +91,7 @@ function compHandler:loadInputData (filepath)
         return true
     else
         log.error ("Failed to load input data!")
-        log.error (data)
+        log.error (tostring (data))
 
         return false
     end
@@ -131,15 +133,21 @@ end
 
 function compHandler:update ()
     if self.scriptFunc ~= nil and self.errorOccurred == false then
+        local originStack = copyTable (tux.layoutData.originStack)
+        local gridStack = copyTable (tux.layoutData.gridStack)
+
         local results = {pcall (self.scriptFunc, unpackInputData(self.inputData))}
         local success = results[1]
 
         if success == true then
             self.returnedValues = {unpack (results, 2)}
         else
-            log.error ("Error in update loop: " .. results[2])
+            log.error ("Error in update loop: " .. tostring (results[2]))
             self.errorOccurred = true
         end
+
+        tux.layoutData.originStack = originStack
+        tux.layoutData.gridStack = gridStack
     end
 end
 
