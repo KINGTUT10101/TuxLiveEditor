@@ -201,8 +201,8 @@ local function options (opt, x, y, w, h)
             local itemsPerPage = math.floor (maxItemSpace / lineHeight) - 5 -- Magic number, WTF? Fix this later
             local startIndex = itemsPerPage * (page - 1) + 1
             local maxPage = math.ceil(#settingsItems / itemsPerPage)
-            print (maxItemSpace, maxItemSpace / lineHeight, maxItemSpace / lineHeight - 2)
-            print (itemsPerPage, #settingsItems,  #settingsItems / itemsPerPage, maxPage)
+            -- print (maxItemSpace, maxItemSpace / lineHeight, maxItemSpace / lineHeight - 2)
+            -- print (itemsPerPage, #settingsItems,  #settingsItems / itemsPerPage, maxPage)
 
             -- Menu controls
             tux.layout.pushNestedGrid ({
