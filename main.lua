@@ -107,6 +107,9 @@ function love.keypressed (key, scancode, isrepeat)
             compHandler:reloadScript ()
         elseif love.keyboard.isDown ("lctrl") == true then
             compHandler:reloadInputData ()
+        else
+            compHandler:reloadScript ()
+            compHandler:reloadInputData ()
         end
 
     elseif key == "q" then
